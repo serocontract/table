@@ -161,16 +161,16 @@ contract SeroInterface {
 
 contract Config {
 
-    uint256 constant MINSERO = 1e10;//最小投资(测试可修改)
-    uint256 constant MAXSERO = 1e22;//最大投资
-    uint256 constant ONESERO = 1e18;//1个SERO的值
+    uint256 constant MINSERO = 1e10;
+    uint256 constant MAXSERO = 1e22;
+    uint256 constant ONESERO = 1e18;
 
-    uint256 constant MAXPLAYER = 255;//每桌最大人数
-    uint256 constant HOLDSECONDS = 30; //停止下注时间
-    uint256 constant FEE = 1; //每注手续费率（百分之）
-    uint256 constant CLOSEFEE = 5; //每桌关闭手续费（百分之）
-    uint256 constant REFERREDFEE = 5;//推荐人手续费(千分之)
-    uint256 constant MAXDESKFEE = 100;//桌主每桌最大手续费（千分之）
+    uint256 constant MAXPLAYER = 255;
+    uint256 constant HOLDSECONDS = 30;
+    uint256 constant FEE = 1;
+    uint256 constant CLOSEFEE = 5;
+    uint256 constant REFERREDFEE = 5;
+    uint256 constant MAXDESKFEE = 100;
 }
 
 contract Ownable {
@@ -227,39 +227,39 @@ contract Winning is Config, SeroInterface, Ownable {
     }
 
     struct Player{
-        uint256 rand;//幸运数
-        address addr;//投资人
+        uint256 rand;
+        address addr;
     }
 
     struct Game {
-        uint256 startTimeStamp;//每局开始时间
-        uint256 amount;//总金额(实际值)
-        uint256 playerNum;//玩家数
-        uint256 lotteryTimeStamp;//开奖时间
-        uint256 winnerId; //中奖人id
-        bool end;//结束标记
+        uint256 startTimeStamp;
+        uint256 amount;
+        uint256 playerNum;
+        uint256 lotteryTimeStamp;
+        uint256 winnerId;
+        bool end;
 
-        mapping(uint256 => Player) playerList;//玩家列表
+        mapping(uint256 => Player) playerList;
     }
 
     struct Table {
-        uint256 times;//游戏局数
-        uint256 maxPlayer; //最大人数
-        uint256 single;//单注金额
-        uint256 intervalSeconds;//开局间隔
-        uint256 pledgeAmount;//质押资金
-        TableStatus status; //状态
-        uint256 fee; //千分之几的费率
-        address creator;//创建者
+        uint256 times;
+        uint256 maxPlayer;
+        uint256 single;
+        uint256 intervalSeconds;
+        uint256 pledgeAmount;
+        TableStatus status;
+        uint256 fee;
+        address creator;
 
-        mapping(uint256 => Game) gameList;//游戏列表
+        mapping(uint256 => Game) gameList;
     }
 
     struct PlayerDetail{
-        uint256 tabId;//桌子id
-        uint256 times; //局数
-        uint256 playerNum;//投注数
-        bool isWinner;//是否中奖
+        uint256 tabId;
+        uint256 times;
+        uint256 playerNum;
+        bool isWinner;
     }
 
     struct PlayerShow{
@@ -267,19 +267,19 @@ contract Winning is Config, SeroInterface, Ownable {
         mapping(uint256=>PlayerDetail) detail;
     }
 
-    Table[] private _tables;//游戏桌
-    PlayerShow[] _allPlayerShow;//索引
+    Table[] private _tables;
+    PlayerShow[] _allPlayerShow;
     mapping(address=>uint256) _playerIndex;
 
-    mapping(address=>uint256) _frozen;//用户冻结总金额
-    mapping(address=>uint256) _deposit;//用户充值总金额
-    mapping(address=>uint256) _balance;//用户余额
-    mapping(address=>uint256) _withdraw;//用户取款总金额
+    mapping(address=>uint256) _frozen;
+    mapping(address=>uint256) _deposit;
+    mapping(address=>uint256) _balance;
+    mapping(address=>uint256) _withdraw;
 
-    uint256 private _playerCount;//玩家数
-    uint256 private _allIncome;//所有收入
-    uint256 private _allOutlay;//所有支出
-    address private _marketAddr;//市场地址
+    uint256 private _playerCount;
+    uint256 private _allIncome;
+    uint256 private _allOutlay;
+    address private _marketAddr;
 
     event TableCreated(uint256, uint256, uint256, uint256);//tabid, maxplayer, single, interval
     event GamePlaying(uint256, uint256, uint256, uint256, uint256);//tabid, times, startTimeStamp, amount, playerNum
@@ -764,7 +764,7 @@ contract Winning is Config, SeroInterface, Ownable {
             }
             table.status = TableStatus.stop;
             game.end = true;
-            game.winnerId = 0;//无中奖者
+            game.winnerId = 0;
             return(0, 0);
         }
 
@@ -772,7 +772,7 @@ contract Winning is Config, SeroInterface, Ownable {
         uint256 winner =  uint256(seed)%game.playerNum;
         table.status = TableStatus.stop;
         game.end = true;
-        game.winnerId = winner.add(1);//索引+1
+        game.winnerId = winner.add(1);
 
         address winnerAddr = game.playerList[winner].addr;
         PlayerShow storage playerShow  = _allPlayerShow[_playerIndex[winnerAddr]];
